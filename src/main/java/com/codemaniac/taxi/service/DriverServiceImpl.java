@@ -8,6 +8,7 @@ import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.util.GeometricShapeFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,10 +23,20 @@ public class DriverServiceImpl implements DriverService {
     @Autowired
     private GeometricShapeFactory geometricShapeFactory;
 
+    @Autowired
+    private EmailService emailService;
+
+    @Value("${msgs.registrations.subject}")
+    private String subject;
+
+    @Value("${msgs.registrations.welcome}")
+    private String welcomeMessage;
 
     @Override
     public void addDriver(Driver driver) {
         driverRepository.save(driver);
+        String msg = String.format(welcomeMessage,driver.getName());
+        emailService.sendSimpleMessage(driver.getEmail(), subject,msg);
     }
 
     @Override

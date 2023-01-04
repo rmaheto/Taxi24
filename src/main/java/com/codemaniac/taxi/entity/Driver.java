@@ -13,11 +13,12 @@ import javax.persistence.*;
 @Entity
 public class Driver {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String phoneNumber;
     private Gender gender;
+    private String email;
     private String license;
     @Enumerated(EnumType.STRING)
     private DriverStatus driverStatus;

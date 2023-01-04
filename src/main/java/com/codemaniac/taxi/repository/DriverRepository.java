@@ -1,7 +1,6 @@
 package com.codemaniac.taxi.repository;
 
 import com.codemaniac.taxi.entity.Driver;
-import com.codemaniac.taxi.entity.Trip;
 import org.locationtech.jts.geom.Geometry;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

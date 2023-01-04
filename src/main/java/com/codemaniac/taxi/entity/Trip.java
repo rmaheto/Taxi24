@@ -15,7 +15,7 @@ import javax.persistence.*;
 @Entity
 public class Trip {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @OneToOne
     @JoinColumn(name = "rider_id")
