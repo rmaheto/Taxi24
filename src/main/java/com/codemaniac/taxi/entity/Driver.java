@@ -1,9 +1,15 @@
 package com.codemaniac.taxi.entity;
 
+import com.codemaniac.taxi.utils.PointDeserializer;
+import com.codemaniac.taxi.utils.PointSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.locationtech.jts.geom.Point;
+
 
 import javax.persistence.*;
 
@@ -23,5 +29,7 @@ public class Driver {
     @Enumerated(EnumType.STRING)
     private DriverStatus driverStatus;
     @Column(columnDefinition = "Point")
+    @JsonSerialize(using = PointSerializer.class)
+    @JsonDeserialize(using = PointDeserializer.class)
     private Point location;
 }
