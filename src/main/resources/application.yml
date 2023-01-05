@@ -34,4 +34,4 @@ mail:
 msgs:
   registrations:
     subject: "Taxi24 Registration Confirmation"
-    welcome: "Welcome %s, Thank you for registering with Taxi24."
+    welcome: "Hello %s, we’re excited to have you. Wherever you’re going, requesting a ride is just a tap away, Thank you for registering with Taxi24."

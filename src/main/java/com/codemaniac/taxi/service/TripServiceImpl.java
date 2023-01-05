@@ -1,14 +1,13 @@
 package com.codemaniac.taxi.service;
 
 import com.codemaniac.taxi.dto.TripDto;
-import com.codemaniac.taxi.entity.Driver;
-import com.codemaniac.taxi.entity.Rider;
-import com.codemaniac.taxi.entity.Trip;
+import com.codemaniac.taxi.entity.*;
 import com.codemaniac.taxi.exception.EntityNotFoundException;
 import com.codemaniac.taxi.repository.DriverRepository;
 import com.codemaniac.taxi.repository.RiderRepository;
 import com.codemaniac.taxi.repository.TripRepository;
 
+import com.codemaniac.taxi.utils.GeoUtils;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
@@ -24,6 +23,8 @@ public class TripServiceImpl implements TripService {
     private TripRepository tripRepository;
     private RiderRepository riderRepository;
     private DriverRepository driverRepository;
+    private DriverService driverService;
+
     private final static GeometryFactory factory = new GeometryFactory();
     @Autowired
     private ModelMapper modelMapper;
@@ -35,9 +36,9 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public TripDto requestTrip(Long riderId,Long driverId, TripDto tripDto) {
-        Point startPoint=null;
-        Point endPoint=null;
+    public TripDto requestTrip(Long riderId, Long driverId, TripDto tripDto) {
+        Point startPoint = null;
+        Point endPoint = null;
         Rider existingRider = riderRepository.findById(riderId)
                 .orElseThrow(() -> new EntityNotFoundException(riderId));
 
@@ -45,8 +46,10 @@ public class TripServiceImpl implements TripService {
                 .orElseThrow(() -> new EntityNotFoundException(driverId));
         Trip trip = new Trip();
         try {
-            startPoint = factory.createPoint(new Coordinate(tripDto.getStartLatitude(), tripDto.getStartLongitude()));
-            endPoint = factory.createPoint(new Coordinate(tripDto.getEndLatitude(), tripDto.getEndLongitude()));
+            startPoint = GeoUtils.createPointUsingLatitudeLongitude(tripDto.getStartLatitude(),
+                    tripDto.getStartLongitude());
+            endPoint = GeoUtils.createPointUsingLatitudeLongitude(tripDto.getEndLatitude(),
+                    tripDto.getEndLongitude());
             trip.setDriver(existingDriver);
             trip.setRider(existingRider);
             trip.setStart(startPoint);
@@ -62,6 +65,19 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
+    public void completeTrip(Long driverId, Long tripId) {
+        Trip foundTrip = tripRepository.findById(tripId)
+                .orElseThrow(() -> new EntityNotFoundException(tripId));
+        foundTrip.setStatus(TripStatus.COMPLETED);
+        driverService.updateDriverStatus(driverId, DriverStatus.AVAILABLE);
+    }
+
+    @Override
+    public void cancelTrip(Long tripId) {
+
+    }
+
+    @Override
     public Trip getTrip(Long tripId) {
         return tripRepository.findById(tripId)
                 .orElseThrow(() -> new EntityNotFoundException(tripId));
@@ -71,12 +87,19 @@ public class TripServiceImpl implements TripService {
     public Trip updateTrip(Long tripId, Trip trip) {
         Trip existingTrip = tripRepository.findById(tripId)
                 .orElseThrow(() -> new EntityNotFoundException(tripId));
-      return null;
+
+        existingTrip.setStatus(trip.getStatus());
+        return null;
     }
 
     @Override
     public List<Trip> getAllTrips() {
         return tripRepository.findAll();
+    }
+
+    @Override
+    public List<Trip> getAllActiveTrips() {
+        return tripRepository.findAllByStatusEquals(TripStatus.STARTED);
     }
 
     @Override

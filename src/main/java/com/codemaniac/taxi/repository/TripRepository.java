@@ -1,6 +1,7 @@
 package com.codemaniac.taxi.repository;
 
 import com.codemaniac.taxi.entity.Trip;
+import com.codemaniac.taxi.entity.TripStatus;
 import org.locationtech.jts.geom.Geometry;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,4 +14,5 @@ import java.util.List;
 public interface TripRepository extends JpaRepository<Trip, Long> {
 
 
+    public List<Trip> findAllByStatusEquals(TripStatus tripStatus);
 }

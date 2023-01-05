@@ -1,6 +1,7 @@
 package com.codemaniac.taxi.service;
 
 import com.codemaniac.taxi.entity.Driver;
+import com.codemaniac.taxi.entity.DriverStatus;
 import com.codemaniac.taxi.exception.EntityNotFoundException;
 import com.codemaniac.taxi.repository.DriverRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -62,6 +63,13 @@ public class DriverServiceImpl implements DriverService {
         existingDriver.setPhoneNumber(driver.getPhoneNumber());
         driverRepository.save(existingDriver);
         return existingDriver;
+    }
+
+    @Override
+    public void updateDriverStatus(Long driverId, DriverStatus status) {
+        Driver existingDriver = driverRepository.findById(driverId)
+                .orElseThrow(() -> new EntityNotFoundException(driverId));
+        existingDriver.setDriverStatus(status);
     }
 
     @Override
