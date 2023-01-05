@@ -15,6 +15,9 @@
     <description>taxi</description>
     <properties>
         <java.version>11</java.version>
+        <tomcat.port>8081</tomcat.port>
+        <remote.debugging.port>8002</remote.debugging.port>
+        <spring.starter.version>2.7.7</spring.starter.version>
         <xstream.version>1.4.11.1</xstream.version>
         <modelmapper.version>3.1.0</modelmapper.version>
         <jackson.jts.version>2.4</jackson.jts.version>
@@ -60,7 +63,6 @@
             <artifactId>modelmapper</artifactId>
             <version>${modelmapper.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
@@ -86,7 +88,6 @@
                     <artifactId>jms</artifactId>
                 </exclusion>
             </exclusions>
-
         </dependency>
 
         <dependency>
@@ -102,11 +103,52 @@
     </dependencies>
 
     <build>
+        <finalName>ROOT</finalName>
+        <testSourceDirectory>src/test/java/</testSourceDirectory>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>src/main/resources/filtered-resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <version>3.2.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>3.0.2</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring.starter.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
                 <configuration>
+                    <jvmArguments>
+                        -Xdebug
+                        -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=${remote.debugging.port}
+                        -Xnoagent
+                        -Djava.compiler=NONE
+                        -Dserver.port=8081
+                    </jvmArguments>
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>
