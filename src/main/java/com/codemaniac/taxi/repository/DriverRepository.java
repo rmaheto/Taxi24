@@ -14,4 +14,10 @@ public interface DriverRepository extends JpaRepository<Driver, Long> {
 
     @Query("SELECT d FROM Driver d WHERE within(d.location, :filter) = true")
     List<Driver> findDriversWithin(@Param("filter") Geometry filter);
+
+    @Query("SELECT d FROM Driver d WHERE ST_DWithin(location, ST_GeomFromText(:filter), 3000)")
+    List<Driver> findClosestDriversWithin(@Param("filter") Geometry filter);
+
+
+
 }

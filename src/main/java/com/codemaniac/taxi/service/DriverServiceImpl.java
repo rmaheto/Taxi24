@@ -76,14 +76,13 @@ public class DriverServiceImpl implements DriverService {
     public List<Driver> findDriversWithinRange(Double latitude, Double longitude, Integer radius) {
         log.info("Searching restaurants {} km to point {} lat., {} long.", radius, latitude, longitude);
         Geometry circle = this.createCircle(latitude, longitude, radius);
-        List<Driver> drivers = this.driverRepository.findDriversWithin(circle);
-        return drivers;
+        return this.driverRepository.findDriversWithin(circle);
     }
 
     private Geometry createCircle(Double latitude, Double longitude, Integer radius) {
         geometricShapeFactory.setNumPoints(32);
         geometricShapeFactory.setCentre(new Coordinate(latitude, longitude));
-        geometricShapeFactory.setSize(radius * 2);
+        geometricShapeFactory.setSize(radius * 2.0);
         return geometricShapeFactory.createCircle();
     }
 

@@ -19,9 +19,9 @@ public class PointDeserializer extends JsonDeserializer<Point> {
             throws IOException {
         String wkt = jsonParser.getValueAsString();
         WKTReader wktReader = new WKTReader();
-        Point point = (Point) wktReader.read("POINT(1 1)");
-        double latitude = point.getY();
-        double longitude = point.getX();
+        Point point = (Point) wktReader.read(wkt);
+        double latitude = point.getX();
+        double longitude = point.getY();
         return GeoUtils.createPointUsingLatitudeLongitude(latitude,longitude);
     }
 }

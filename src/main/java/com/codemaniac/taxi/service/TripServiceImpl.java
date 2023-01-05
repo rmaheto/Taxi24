@@ -1,16 +1,11 @@
 package com.codemaniac.taxi.service;
 
-import com.codemaniac.taxi.dto.TripDto;
 import com.codemaniac.taxi.entity.*;
 import com.codemaniac.taxi.exception.EntityNotFoundException;
 import com.codemaniac.taxi.repository.DriverRepository;
 import com.codemaniac.taxi.repository.RiderRepository;
 import com.codemaniac.taxi.repository.TripRepository;
-
-import com.codemaniac.taxi.utils.GeoUtils;
-import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
-import org.locationtech.jts.geom.Point;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +20,7 @@ public class TripServiceImpl implements TripService {
     private DriverRepository driverRepository;
     private DriverService driverService;
 
-    private final static GeometryFactory factory = new GeometryFactory();
+    private static final GeometryFactory factory = new GeometryFactory();
     @Autowired
     private ModelMapper modelMapper;
 
@@ -36,32 +31,18 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public TripDto requestTrip(Long riderId, Long driverId, TripDto tripDto) {
-        Point startPoint = null;
-        Point endPoint = null;
+    public Trip requestTrip(Long riderId, Long driverId, Trip trip) {
         Rider existingRider = riderRepository.findById(riderId)
                 .orElseThrow(() -> new EntityNotFoundException(riderId));
 
         Driver existingDriver = driverRepository.findById(driverId)
                 .orElseThrow(() -> new EntityNotFoundException(driverId));
-        Trip trip = new Trip();
-        try {
-            startPoint = GeoUtils.createPointUsingLatitudeLongitude(tripDto.getStartLatitude(),
-                    tripDto.getStartLongitude());
-            endPoint = GeoUtils.createPointUsingLatitudeLongitude(tripDto.getEndLatitude(),
-                    tripDto.getEndLongitude());
+
             trip.setDriver(existingDriver);
             trip.setRider(existingRider);
-            trip.setStart(startPoint);
-            trip.setEnd(endPoint);
-            trip.setStatus(tripDto.getStatus());
             tripRepository.save(trip);
-        } catch (Exception e) {
-            System.out.println(e.getCause());
-            throw new RuntimeException(e);
-        }
 
-        return modelMapper.map(trip, TripDto.class);
+        return trip;
     }
 
     @Override
@@ -74,7 +55,11 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public void cancelTrip(Long tripId) {
-
+        Trip foundTrip = tripRepository.findById(tripId)
+                .orElseThrow(() -> new EntityNotFoundException(tripId));
+        foundTrip.setStatus(TripStatus.COMPLETED);
+        foundTrip.setStatus(TripStatus.CANCELLED);
+        tripRepository.save(foundTrip);
     }
 
     @Override

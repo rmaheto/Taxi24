@@ -8,13 +8,17 @@ import org.locationtech.jts.io.ParseException;
 import org.locationtech.jts.io.WKTReader;
 
 public class GeoUtils {
-    private final static GeometryFactory factory = new GeometryFactory();
+    private static final GeometryFactory factory = new GeometryFactory();
+
+    private  GeoUtils(){
+
+    }
 
     public static Geometry wktToGeometry(String wellKnownText) throws ParseException {
         return new WKTReader().read(wellKnownText);
     }
 
-    public static Point createPointUsingLatitudeLongitude(double latitude, double longitude) throws ParseException {
+    public static Point createPointUsingLatitudeLongitude(double latitude, double longitude) {
 
         return factory.createPoint(new Coordinate(latitude, longitude));
     }

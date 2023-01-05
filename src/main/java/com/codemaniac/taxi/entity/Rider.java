@@ -18,4 +18,5 @@ public class Rider {
     private String phoneNumber;
     @Enumerated(EnumType.STRING)
     private Gender gender;
+    private String email;
 }

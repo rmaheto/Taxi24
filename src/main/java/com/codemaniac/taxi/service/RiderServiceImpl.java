@@ -3,9 +3,9 @@ package com.codemaniac.taxi.service;
 import com.codemaniac.taxi.entity.Rider;
 import com.codemaniac.taxi.exception.EntityNotFoundException;
 import com.codemaniac.taxi.repository.RiderRepository;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -31,7 +31,7 @@ public class RiderServiceImpl implements RiderService {
 
     @Override
     public List<Rider> getAllRiders() {
-        return null;
+        return Collections.emptyList();
     }
 
     @Override

@@ -20,9 +20,9 @@ public class TripController {
     }
 
     @PostMapping("/{riderId}/{driverId}")
-    public ResponseEntity<TripDto> requestTrip(@PathVariable Long riderId, @PathVariable Long driverId,
-                                               @RequestBody TripDto tripDto) {
-        return new ResponseEntity<TripDto>(tripService.requestTrip(riderId, driverId, tripDto), HttpStatus.CREATED);
+    public ResponseEntity<Trip> requestTrip(@PathVariable Long riderId, @PathVariable Long driverId,
+                                               @RequestBody Trip trip) {
+        return new ResponseEntity<Trip>(tripService.requestTrip(riderId, driverId, trip), HttpStatus.CREATED);
     }
 
     @PostMapping("/complete/{driverId}/{tripId}")

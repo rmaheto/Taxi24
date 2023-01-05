@@ -1,6 +1,9 @@
 package com.codemaniac.taxi.entity;
 
-
+import com.codemaniac.taxi.utils.PointDeserializer;
+import com.codemaniac.taxi.utils.PointSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,12 +27,12 @@ public class Trip {
     @JoinColumn(name = "driver_id")
     private Driver driver;
     @Column(columnDefinition = "Point")
-//    @JsonSerialize(using = GeometrySerializer.class)
-//    @JsonDeserialize(contentUsing = GeometryDeserializer.class)
-    private Point start;
+    @JsonSerialize(using = PointSerializer.class)
+    @JsonDeserialize(using = PointDeserializer.class)
+    private Point startLocation;
     @Column(columnDefinition = "Point")
-//    @JsonSerialize(using = GeometrySerializer.class)
-//    @JsonDeserialize(contentUsing = GeometryDeserializer.class)
-    private Point end;
+    @JsonSerialize(using = PointSerializer.class)
+    @JsonDeserialize(using = PointDeserializer.class)
+    private Point endLocation;
     private TripStatus status;
 }

@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface TripService {
 
-    public TripDto requestTrip(Long riderId, Long driverId, TripDto tripDto);
+    public Trip requestTrip(Long riderId, Long driverId, Trip trip);
     public void completeTrip(Long driverId, Long tripId);
     public void cancelTrip(Long tripId);
     public Trip getTrip(Long tripId);
