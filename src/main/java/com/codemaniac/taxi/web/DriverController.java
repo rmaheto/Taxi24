@@ -25,7 +25,7 @@ public class DriverController {
         return new ResponseEntity<>(driver, HttpStatus.CREATED);
     }
 
-    @RequestMapping
+    @GetMapping
     public ResponseEntity<List<Driver>> getAllDrivers(){
         return new ResponseEntity<>(driverService.getAllDrivers(),HttpStatus.OK);
     }
@@ -33,6 +33,14 @@ public class DriverController {
     @GetMapping("/{driverId}")
     public ResponseEntity<Driver> getDriverById(@PathVariable Long driverId){
         return new ResponseEntity<>(driverService.getDriver(driverId),HttpStatus.OK);
+    }
+
+    @GetMapping("/withinrange")
+    public ResponseEntity<List<Driver>> getAllDriversWithinRange(@RequestParam double latitude,
+                                                                 @RequestParam double longitude,
+                                                                 @RequestParam double distance){
+
+        return new ResponseEntity<>(driverService.findDriversWithinRange(latitude,longitude,distance),HttpStatus.OK);
     }
 
     @PutMapping("/{driverId}")

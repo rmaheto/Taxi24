@@ -4,9 +4,11 @@ import com.codemaniac.taxi.entity.Driver;
 import com.codemaniac.taxi.entity.DriverStatus;
 import com.codemaniac.taxi.exception.EntityNotFoundException;
 import com.codemaniac.taxi.repository.DriverRepository;
+import com.codemaniac.taxi.utils.GeoUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.util.GeometricShapeFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,20 +26,11 @@ public class DriverServiceImpl implements DriverService {
     @Autowired
     private GeometricShapeFactory geometricShapeFactory;
 
-    @Autowired
-    private EmailService emailService;
 
-    @Value("${msgs.registrations.subject}")
-    private String subject;
-
-    @Value("${msgs.registrations.welcome}")
-    private String welcomeMessage;
 
     @Override
     public void addDriver(Driver driver) {
         driverRepository.save(driver);
-        String msg = String.format(welcomeMessage,driver.getName());
-        emailService.sendSimpleMessage(driver.getEmail(), subject,msg);
     }
 
     @Override
@@ -73,10 +66,12 @@ public class DriverServiceImpl implements DriverService {
     }
 
     @Override
-    public List<Driver> findDriversWithinRange(Double latitude, Double longitude, Integer radius) {
-        log.info("Searching restaurants {} km to point {} lat., {} long.", radius, latitude, longitude);
-        Geometry circle = this.createCircle(latitude, longitude, radius);
-        return this.driverRepository.findDriversWithin(circle);
+    public List<Driver> findDriversWithinRange(double latitude, double longitude, double distance) {
+
+
+        Point point = GeoUtils.createPointUsingLatitudeLongitude(latitude,longitude);
+        log.info("Searching drivers {} km within point {} ", distance, point);
+        return this.driverRepository.findByDriverLocationWithinDistance(point,distance);
     }
 
     private Geometry createCircle(Double latitude, Double longitude, Integer radius) {

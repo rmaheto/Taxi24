@@ -14,6 +14,6 @@ public interface DriverService {
     public Driver updateDriver(Long driverId, Driver driver);
     public void updateDriverStatus(Long driverId, DriverStatus status);
     public void deleteDriver(Long driverId);
-    public List<Driver> findDriversWithinRange(Double latitude, Double longitude, Integer radius);
+    public List<Driver> findDriversWithinRange(double latitude, double longitude, double radius);
 
 }
