@@ -2,6 +2,7 @@ package com.codemaniac.taxi.aop;
 
 import com.codemaniac.taxi.entity.Driver;
 import com.codemaniac.taxi.service.EmailService;
+import com.codemaniac.taxi.service.SmsService;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
@@ -13,10 +14,12 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 @Slf4j
-public class EmailAspect {
+public class NotificationsAspect {
 
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private SmsService smsService;
 
     @Value("${msgs.registrations.subject}")
     private String subject;

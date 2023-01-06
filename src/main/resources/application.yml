@@ -1,5 +1,6 @@
-app: "hello"
 spring:
+  application:
+    name: Taxi24
   datasource:
     url: "jdbc:mysql://localhost:3306/taxi24"
 #    driver-class-name: com.mysql.cj.jdbc.Driver
@@ -12,6 +13,10 @@ spring:
     properties:
       hibernate.dialect: org.hibernate.spatial.dialect.mysql.MySQL8SpatialDialect
     database-platform: org.hibernate.spatial.dialect.mysql.MySQL8SpatialDialect
+  twilio:
+    accountSid: your_account_sid
+    authToken: your_auth_token
+    phoneNumber: your_twilio_phone_number
 
 server:
   port: 8090
